@@ -1,1 +1,1 @@
-Evnet registration system.
+Event registration system.
