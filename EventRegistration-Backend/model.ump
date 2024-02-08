@@ -1,0 +1,32 @@
+class Person {
+  Integer id;
+  String name;
+  String email;
+  String password;
+  Date creationDate;
+}
+
+class Registration {
+  * -> 1 Person;
+  * -> 1 Event;
+}
+
+class Event {
+  abstract;
+  Integer id;
+  String name;
+  Date date;
+  Time startTime;
+  Time endTime;
+  Integer registrationLimit;
+}
+
+class OnlineEvent {
+  isA Event;
+  String url;
+}
+
+class InPersonEvent {
+  isA Event;
+  String address;
+}
