@@ -22,12 +22,11 @@ public abstract class Event {
     private Time endTime;
     private int registrationLimit;
 
-    // ------------------------
-    // CONSTRUCTOR
-    // ------------------------
+    // Hibernate needs a default constructor, but it doesn't need to be public
+    protected Event() {
+    }
 
-    public Event(int aId, String aName, Date aDate, Time aStartTime, Time aEndTime, int aRegistrationLimit) {
-        id = aId;
+    public Event(String aName, Date aDate, Time aStartTime, Time aEndTime, int aRegistrationLimit) {
         name = aName;
         date = aDate;
         startTime = aStartTime;

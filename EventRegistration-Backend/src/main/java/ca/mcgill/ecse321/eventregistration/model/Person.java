@@ -17,12 +17,12 @@ public class Person {
     private String password;
     private Date creationDate;
 
-    // ------------------------
-    // CONSTRUCTOR
-    // ------------------------
+    // Hibernate needs a default constructor, but it doesn't need to be public
+    @SuppressWarnings("unused")
+    private Person() {
+    }
 
-    public Person(int aId, String aName, String aEmail, String aPassword, Date aCreationDate) {
-        id = aId;
+    public Person(String aName, String aEmail, String aPassword, Date aCreationDate) {
         name = aName;
         email = aEmail;
         password = aPassword;

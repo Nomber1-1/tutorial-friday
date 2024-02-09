@@ -13,6 +13,11 @@ public class Registration {
     @EmbeddedId
     private Key key;
 
+    // Hibernate needs a default constructor, but it doesn't need to be public
+    @SuppressWarnings("unused")
+    private Registration() {
+    }
+
     public Registration(Key key) {
         this.key = key;
     }

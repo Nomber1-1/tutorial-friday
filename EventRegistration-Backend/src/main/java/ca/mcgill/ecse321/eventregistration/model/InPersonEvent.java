@@ -10,13 +10,14 @@ public class InPersonEvent extends Event {
 
     private String address;
 
-    // ------------------------
-    // CONSTRUCTOR
-    // ------------------------
+    // Hibernate needs a default constructor, but it doesn't need to be public
+    @SuppressWarnings("unused")
+    private InPersonEvent() {
+    }
 
-    public InPersonEvent(int aId, String aName, Date aDate, Time aStartTime, Time aEndTime, int aRegistrationLimit,
+    public InPersonEvent(String aName, Date aDate, Time aStartTime, Time aEndTime, int aRegistrationLimit,
             String aAddress) {
-        super(aId, aName, aDate, aStartTime, aEndTime, aRegistrationLimit);
+        super(aName, aDate, aStartTime, aEndTime, aRegistrationLimit);
         address = aAddress;
     }
 
