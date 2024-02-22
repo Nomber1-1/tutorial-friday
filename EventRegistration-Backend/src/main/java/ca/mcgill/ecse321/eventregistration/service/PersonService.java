@@ -1,7 +1,9 @@
 package ca.mcgill.ecse321.eventregistration.service;
 
+import java.sql.Date;
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import ca.mcgill.ecse321.eventregistration.model.Person;
@@ -20,7 +22,9 @@ public class PersonService {
         return repo.findPersonById(pid);
     }
 
-    public Person createPerson(@NonNull Person person) {
+    public Person createPerson(String name, String email, String password) {
+        Date creationDate = Date.valueOf(LocalDate.now());
+        Person person = new Person(name, email, email, creationDate);
         return repo.save(person);
     }
 }
