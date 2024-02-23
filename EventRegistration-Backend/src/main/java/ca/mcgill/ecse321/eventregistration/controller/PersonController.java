@@ -36,6 +36,12 @@ public class PersonController {
         return new PersonListDto(people);
     }
 
+    /**
+     * Create a new person.
+     * 
+     * @param person The person to create.
+     * @return The created person, including their ID.
+     */
     @PostMapping("/people")
     public PersonResponseDto createPerson(@RequestBody PersonRequestDto person) {
         Person createdPerson = personService.createPerson(person.getName(), person.getEmail(), person.getPassword());
