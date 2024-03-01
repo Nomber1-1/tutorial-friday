@@ -27,6 +27,10 @@ public class PersonService {
 
     @Transactional
     public Person createPerson(String name, String email, String password) {
+        if (password == null || password.length() < 8) {
+            throw new IllegalArgumentException("Password too short.");
+        }
+
         Date now = Date.valueOf(LocalDate.now());
         Person personToCreate = new Person(name, email, password, now);
         return personRepo.save(personToCreate);
