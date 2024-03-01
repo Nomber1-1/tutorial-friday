@@ -88,7 +88,17 @@ public class Person {
         return creationDate;
     }
 
-    public void delete() {
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Person)) {
+            return false;
+        }
+        Person other = (Person) obj;
+        return this.getId() == other.getId()
+                && this.getName().equals(other.getName())
+                && this.getEmail().equals(other.getEmail())
+                && this.getPassword().equals(other.getPassword())
+                && this.getCreationDate().equals(other.getCreationDate());
     }
 
     public String toString() {

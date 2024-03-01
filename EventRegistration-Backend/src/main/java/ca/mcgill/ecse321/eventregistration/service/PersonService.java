@@ -22,7 +22,11 @@ public class PersonService {
 
     @Transactional
     public Person findPersonById(int pid) {
-        return personRepo.findPersonById(pid);
+        Person p = personRepo.findPersonById(pid);
+        if (p == null) {
+            throw new IllegalArgumentException("There is no person with ID " + pid + ".");
+        }
+        return p;
     }
 
     @Transactional
