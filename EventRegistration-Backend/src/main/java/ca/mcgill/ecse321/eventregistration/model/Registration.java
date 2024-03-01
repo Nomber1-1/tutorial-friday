@@ -30,6 +30,9 @@ public class Registration {
         this.key = key;
     }
 
+    // See
+    // https://docs.jboss.org/hibernate/orm/6.4/userguide/html_single/Hibernate_User_Guide.html#identifiers-composite
+    // for the rules that the key class must abide by
     @Embeddable
     public static class Key implements Serializable {
         @ManyToOne
@@ -37,6 +40,7 @@ public class Registration {
         @ManyToOne
         private Event event;
 
+        // This constructor needs to be public, according to the docs
         public Key() {
         }
 

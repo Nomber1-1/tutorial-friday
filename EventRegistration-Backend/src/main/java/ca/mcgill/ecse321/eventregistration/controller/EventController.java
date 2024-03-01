@@ -46,29 +46,15 @@ public class EventController {
     @GetMapping("/events/{eid}")
     public EventResponseDto findEventById(@PathVariable int eid) {
         Event event = service.findEventById(eid);
-        return toDto(event);
+        return EventResponseDto.create(event);
     }
 
     @GetMapping("/events")
     public EventListDto findAllEvents() {
         List<EventResponseDto> dtos = new ArrayList<EventResponseDto>();
         for (Event e : service.findAllEvents()) {
-            dtos.add(toDto(e));
+            dtos.add(EventResponseDto.create(e));
         }
         return new EventListDto(dtos);
-    }
-
-    private EventResponseDto toDto(Event e) {
-        // Normally you'd want to have a method like toDto() on the model class so you
-        // don't need to do this instanceof nonsense. But in a layered architecture, we
-        // don't want a layer (in this case, the models) to depend on a higher layer (in
-        // this case, the DTOs).
-        if (e instanceof OnlineEvent) {
-            return new OnlineEventResponseDto((OnlineEvent) e);
-        } else if (e instanceof InPersonEvent) {
-            return new InPersonEventResponseDto((InPersonEvent) e);
-        } else {
-            throw new IllegalArgumentException("Unknown event type.");
-        }
     }
 }
