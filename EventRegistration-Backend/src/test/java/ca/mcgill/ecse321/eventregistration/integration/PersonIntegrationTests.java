@@ -19,6 +19,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import ca.mcgill.ecse321.eventregistration.dto.ErrorDto;
 import ca.mcgill.ecse321.eventregistration.dto.PersonRequestDto;
 import ca.mcgill.ecse321.eventregistration.dto.PersonResponseDto;
 
@@ -33,6 +34,7 @@ public class PersonIntegrationTests {
     private final String VALID_EMAIL = "alice@mail.mcgill.ca";
     private final String VALID_PASSWORD = "password123";
     private final String INVALID_PASSWORD = "123";
+    private final int INVALID_ID = 0;
     private int validId;
 
     @Test
@@ -46,7 +48,7 @@ public class PersonIntegrationTests {
 
         // Assert
         assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
         PersonResponseDto createdPerson = response.getBody();
         assertNotNull(createdPerson);
         assertEquals(VALID_NAME, createdPerson.getName());
@@ -85,10 +87,32 @@ public class PersonIntegrationTests {
         PersonRequestDto request = new PersonRequestDto(VALID_NAME, VALID_EMAIL, INVALID_PASSWORD);
 
         // Act
-        ResponseEntity<String> response = client.postForEntity("/people", request, String.class);
+        ResponseEntity<ErrorDto> response = client.postForEntity("/people", request, ErrorDto.class);
 
         // Assert
         assertNotNull(response);
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        ErrorDto body = response.getBody();
+        assertNotNull(body);
+        assertEquals(1, body.getErrors().size());
+        assertEquals("Password too short.", body.getErrors().get(0));
+    }
+
+    @Test
+    @Order(4)
+    public void testReadPersonByInvalidId() {
+        // Set up
+        String url = "/people/" + this.INVALID_ID;
+
+        // Act
+        ResponseEntity<ErrorDto> response = client.getForEntity(url, ErrorDto.class);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        ErrorDto body = response.getBody();
+        assertNotNull(body);
+        assertEquals(1, body.getErrors().size());
+        assertEquals("There is no person with ID " + this.INVALID_ID + ".", body.getErrors().get(0));
     }
 }

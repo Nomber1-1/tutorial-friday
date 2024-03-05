@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.eventregistration.dto.PersonListDto;
@@ -43,6 +45,7 @@ public class PersonController {
      * @return The created person, including their ID.
      */
     @PostMapping("/people")
+    @ResponseStatus(HttpStatus.CREATED)
     public PersonResponseDto createPerson(@RequestBody PersonRequestDto person) {
         Person createdPerson = personService.createPerson(person.getName(), person.getEmail(), person.getPassword());
         return new PersonResponseDto(createdPerson);

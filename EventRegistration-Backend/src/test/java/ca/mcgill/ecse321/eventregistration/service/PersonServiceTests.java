@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import ca.mcgill.ecse321.eventregistration.exception.EventRegistrationException;
 import ca.mcgill.ecse321.eventregistration.model.Person;
 import ca.mcgill.ecse321.eventregistration.repository.PersonRepository;
 
@@ -79,7 +80,7 @@ public class PersonServiceTests {
 
         // Act
         // Assert
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> service.findPersonById(id));
+        EventRegistrationException e = assertThrows(EventRegistrationException.class, () -> service.findPersonById(id));
         assertEquals("There is no person with ID " + id + ".", e.getMessage());
         // assertThrows is basically like the following:
         // try {
@@ -88,6 +89,5 @@ public class PersonServiceTests {
         // } catch (IllegalArgumentException e) {
         // assertEquals("There is no person with ID " + id + ".", e.getMessage());
         // }
-
     }
 }
