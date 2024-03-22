@@ -7,7 +7,7 @@
             <input type="date" placeholder="Date" v-model="newEventDate" />
             <input type="time" placeholder="Start Time" v-model="newEventStartTime" />
             <input type="time" placeholder="End Time" v-model="newEventEndTime" />
-            <input type="text" placeholder="Limit" v-model="newEventLimit" />
+            <input type="text" placeholder="Limit" v-model="newEventRegLimit" />
             <input type="text" placeholder="Location" v-model="newEventLocation" />
             <button @click="createEvent()" v-bind:disabled="isCreateBtnDisabled">Create</button>
             <button class="danger-btn" @click="clearInputs()">Clear</button>
@@ -23,7 +23,7 @@
                 <tr v-for="e in events">
                     <td>{{ e.name }}</td>
                     <td>{{ e.date }}</td>
-                    <td>{{ e.limit ? e.limit : "-" }}</td>
+                    <td>{{ e.registrationLimit ? e.registrationLimit : "-" }}</td>
                 </tr>
             </tbody>
         </table>
@@ -31,34 +31,59 @@
 </template>
 
 <script>
+import axios from "axios";
+import config from "../../config";
+
+const frontendUrl = `${config.dev.host}:${config.dev.port}`;
+const client = axios.create({
+    // IMPORTANT: baseURL, not baseUrl!
+    baseURL: config.dev.backendBaseUrl,
+    headers: { 'Access-Control-Allow-Origin': frontendUrl }
+});
+
 export default {
     name: "Home",
     data() {
         return {
-            events: [
-                { name: "McGill Juggling", date: "2024-03-22", startTime: "9:00:00", endTime: "21:00:00", limit: 100, location: "McGill" },
-                { name: "Solar Eclipse", date: "2024-04-08", startTime: "14:15:00", endTime: "16:30:00", limit: null, location: "Montreal" },
-            ],
+            events: [],
             newEventName: null,
             newEventDate: null,
             newEventStartTime: null,
             newEventEndTime: null,
-            newEventLimit: null,
+            newEventRegLimit: null,
             newEventLocation: null
         };
     },
+    async created() {
+        try {
+            const response = await client.get("/events");
+            this.events = response.data.events;
+        }
+        catch (e) {
+            // TODO: Show some kind of warning to the user
+            console.log(e);
+        }
+    },
     methods: {
-        createEvent() {
+        async createEvent() {
             const newEvent = {
+                type: "IN_PERSON",
                 name: this.newEventName,
                 date: this.newEventDate,
                 startTime: this.newEventStartTime,
                 endTime: this.newEventEndTime,
-                limit: this.newEventLimit,
+                registrationLimit: this.newEventRegLimit,
                 location: this.newEventLocation,
+            };
+            try {
+                const response = await client.post("/events", newEvent);
+                this.events.push(response.data);
+                this.clearInputs();
             }
-            this.events.push(newEvent);
-            this.clearInputs();
+            catch (e) {
+                // TODO: Show some kind of warning to the user
+                console.log(e);
+            }
         },
         clearInputs() {
             this.newEventName = null;
@@ -74,6 +99,7 @@ export default {
             return (!this.newEventName
                 || !this.newEventDate
                 || !this.newEventStartTime
+                || !this.newEventEndTime
                 || !this.newEventLocation);
         }
     }
