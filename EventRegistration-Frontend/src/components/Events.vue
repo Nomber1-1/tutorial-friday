@@ -3,15 +3,14 @@
         <h1>Event Registration</h1>
         <h2>Schedule New In-Person Event</h2>
         <div>
-            <input type="text" placeholder="Name" id="name-input" />
-            <input type="date" placeholder="Date" id="date-input" />
-            <input type="time" placeholder="Start Time" />
-            <input type="time" placeholder="End Time" />
-            <input type="text" placeholder="Registration Limit" id="reg-limit-input" />
-            <input type="text" placeholder="Location" />
-            <button id="create-btn">Create Event</button>
-            <button class="danger-btn">Clear</button>
-            <button class="danger-btn">Delete All Events</button>
+            <input type="text" placeholder="Name" v-model="newEventName" />
+            <input type="date" placeholder="Date" v-model="newEventDate" />
+            <input type="time" placeholder="Start Time" v-model="newEventStartTime" />
+            <input type="time" placeholder="End Time" v-model="newEventEndTime" />
+            <input type="text" placeholder="Registration Limit" v-model="newEventRegLimit" />
+            <input type="text" placeholder="Location" v-model="newEventLocation" />
+            <button @click="createEvent()" v-bind:disabled="isCreateBtnDisabled">Create Event</button>
+            <button class="danger-btn" @click="clearInputs()">Clear</button>
         </div>
         <h2>Events</h2>
         <table>
@@ -21,17 +20,68 @@
                     <th>Date</th>
                     <th>Limit</th>
                 </tr>
-                <tr>
-                    <td>Party</td>
-                    <td>2024-03-23</td>
-                    <td>1</td>
+                <tr v-for="e in events">
+                    <td>{{ e.name }}</td>
+                    <td>{{ e.date }}</td>
+                    <td>{{ e.registrationLimit }}</td>
                 </tr>
             </tbody>
         </table>
     </div>
 </template>
 
-<script></script>
+<script>
+export default {
+    name: "Events",
+    data() {
+        return {
+            events: [
+                { name: "Party", date: "2024-03-23", startTime: "22:00:00", endTime: "23:00:00", registrationLimit: 1, location: "My Place" },
+                { name: "Solar Eclipse", date: "2024-04-08", startTime: "14:15:00", endTime: "16:30:00", registrationLimit: null, location: "McGill" },
+            ],
+            newEventName: null,
+            newEventDate: null,
+            newEventStartTime: null,
+            newEventEndTime: null,
+            newEventRegLimit: null,
+            newEventLocation: null
+        };
+    },
+    methods: {
+        createEvent() {
+            const newEvent = {
+                name: this.newEventName,
+                date: this.newEventDate,
+                startTime: this.newEventStartTime,
+                endTime: this.newEventEndTime,
+                registrationLimit: this.newEventRegLimit,
+                location: this.newEventLocation
+            };
+            this.events.push(newEvent);
+            this.clearInputs()
+        },
+        clearInputs() {
+            this.newEventName = null;
+            this.newEventDate = null;
+            this.newEventStartTime = null;
+            this.newEventEndTime = null;
+            this.newEventRegLimit = null;
+            this.newEventLocation = null;
+        }
+    },
+    computed: {
+        isCreateBtnDisabled() {
+            return (
+                !this.newEventName
+                || !this.newEventDate
+                || !this.newEventStartTime
+                || !this.newEventEndTime
+                || !this.newEventLocation
+            );
+        }
+    }
+};
+</script>
 
 <style>
 #events {
@@ -54,10 +104,5 @@ th {
 .danger-btn {
     border: 1px solid red;
     color: red;
-}
-
-#create-btn {
-    border: 1px solid green;
-    color: green;
 }
 </style>
