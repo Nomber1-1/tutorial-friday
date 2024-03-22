@@ -31,14 +31,19 @@
 </template>
 
 <script>
+import axios from "axios";
+import config from "../../config";
+
+const client = axios.create({
+    // IMPORTANT: baseURL, not baseUrl
+    baseURL: config.dev.backendBaseUrl
+});
+
 export default {
     name: "Events",
     data() {
         return {
-            events: [
-                { name: "Party", date: "2024-03-23", startTime: "22:00:00", endTime: "23:00:00", registrationLimit: 1, location: "My Place" },
-                { name: "Solar Eclipse", date: "2024-04-08", startTime: "14:15:00", endTime: "16:30:00", registrationLimit: null, location: "McGill" },
-            ],
+            events: [],
             newEventName: null,
             newEventDate: null,
             newEventStartTime: null,
@@ -47,9 +52,20 @@ export default {
             newEventLocation: null
         };
     },
+    async created() {
+        try {
+            const response = await client.get("/events");
+            this.events = response.data.events
+        }
+        catch (e) {
+            // TODO: show the user a warning
+            console.log(e);
+        }
+    },
     methods: {
-        createEvent() {
+        async createEvent() {
             const newEvent = {
+                type: "IN_PERSON",
                 name: this.newEventName,
                 date: this.newEventDate,
                 startTime: this.newEventStartTime,
@@ -57,8 +73,15 @@ export default {
                 registrationLimit: this.newEventRegLimit,
                 location: this.newEventLocation
             };
-            this.events.push(newEvent);
-            this.clearInputs()
+            try {
+                const response = await client.post("/events", newEvent);
+                this.events.push(response.data);
+                this.clearInputs();
+            }
+            catch (e) {
+                // TODO: show the user a warning
+                console.log(e);
+            }
         },
         clearInputs() {
             this.newEventName = null;
