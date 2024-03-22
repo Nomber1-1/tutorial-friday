@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Event Registration</title>
+    <script src="./index.js"></script>
+    <link rel="stylesheet" href="./index.css" />
+</head>
+
+<body>
+    <h1>Event Registration</h1>
+    <h2>New In-Person Event</h2>
+    <div>
+        <input type="text" placeholder="Name" id="name-input" />
+        <input type="date" placeholder="Date" id="date-input" />
+        <input type="time" placeholder="Start Time" />
+        <input type="time" placeholder="End Time" />
+        <input type="text" placeholder="Limit" id="limit-input" />
+        <button id="create-btn">Create</button>
+        <button class="danger-btn">Clear</button>
+        <button class="danger-btn">Delete All Events</button>
+    </div>
+    <h2>Events</h2>
+    <table>
+        <tbody id="event-table-body">
+            <tr>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Limit</th>
+            </tr>
+            <tr>
+                <td>McGill Juggling Fest</td>
+                <td>2024-03-22</td>
+                <td>100</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>
